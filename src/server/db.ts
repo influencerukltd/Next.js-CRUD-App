@@ -1,12 +1,7 @@
-import { PrismaClient } from '@prisma/client'
+import { neon } from '@neondatabase/serverless'
 
-interface CustomNodeJsGlobal {
-  prisma: PrismaClient;
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is not set')
 }
 
-declare const global: CustomNodeJsGlobal;
-
-export const prisma = global.prisma || new PrismaClient();
-
-if (process.env.NODE_ENV === 'development') global.prisma = prisma;
-
+export const sql = neon(process.env.DATABASE_URL)

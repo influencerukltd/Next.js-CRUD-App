@@ -6,28 +6,47 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table'
-import { prisma } from '@/server/db'
+import { sql } from '@/server/db'
 import DeleteButton from '../../components/ui/DeleteButton'
 import AddEnrollmentModal from './AddEnrollmentModal'
 import EditButton from '../../components/ui/EditButton'
 
+interface EnrollmentRow {
+  id_inscriere: number
+  data_inscriere: string
+  stadiu: string
+  angajat_nume: string
+  angajat_prenume: string
+  curs_nume: string
+}
+
 export default async function EnrollmentTable() {
-  const enrollments = await prisma.inscriere.findMany({
-    orderBy: { id_inscriere: 'desc' },
-    include: {
-      angajat: {
-        select: {
-          nume: true,
-          prenume: true,
-        },
-      },
-      curs: {
-        select: {
-          nume: true,
-        },
-      },
-    },
-  })
+  const enrollments = await sql`
+    SELECT 
+      i.id_inscriere,
+      i.data_inscriere,
+      i.stadiu,
+      a.nume as angajat_nume,
+      a.prenume as angajat_prenume,
+      c.nume as curs_nume
+    FROM inscriere i
+    LEFT JOIN angajat a ON i.id_angajat = a.id_angajat
+    LEFT JOIN curs c ON i.id_curs = c.id_curs
+    ORDER BY i.id_inscriere DESC
+  ` as EnrollmentRow[]
+
+  if (enrollments.length === 0) {
+    return (
+      <div className="mx-10 rounded-lg border bg-black font-semibold">
+        <div className="flex w-full items-center justify-between p-5">
+          <h2>Inscrieri</h2>
+          <AddEnrollmentModal />
+        </div>
+        <div className="h-0.5 border-t-0 bg-gray-800"></div>
+        <p className="p-5 text-gray-400">No enrollments found.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="mx-10 rounded-lg border bg-black font-semibold">
@@ -48,15 +67,14 @@ export default async function EnrollmentTable() {
         </TableHeader>
         <TableBody>
           {enrollments.map(enrollment => {
-            const angajat = `${enrollment.angajat.nume} ${enrollment.angajat.prenume}`
+            const angajat = `${enrollment.angajat_nume} ${enrollment.angajat_prenume}`
+            const dataInscriere = new Date(enrollment.data_inscriere).toLocaleDateString('en-UK')
             return (
               <TableRow key={enrollment.id_inscriere} className="relative">
                 <TableCell>{enrollment.id_inscriere}</TableCell>
-                <TableCell>
-                  {enrollment.data_inscriere.toLocaleDateString('en-UK')}
-                </TableCell>
+                <TableCell>{dataInscriere}</TableCell>
                 <TableCell>{angajat}</TableCell>
-                <TableCell>{enrollment.curs.nume}</TableCell>
+                <TableCell>{enrollment.curs_nume}</TableCell>
                 <TableCell>{enrollment.stadiu}</TableCell>
 
                 <TableCell>
