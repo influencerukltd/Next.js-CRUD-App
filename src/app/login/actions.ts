@@ -4,15 +4,12 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/server/db'
 import { createSession, verifyPassword, hashPassword } from '@/lib/auth'
 
-export type AuthState = {
+export type AuthResult = {
   error?: string
   success?: boolean
 }
 
-export async function login(
-  _prevState: AuthState,
-  formData: FormData
-): Promise<AuthState> {
+export async function login(formData: FormData): Promise<AuthResult> {
   const username = formData.get('username') as string
   const password = formData.get('password') as string
 
@@ -44,10 +41,7 @@ export async function login(
   redirect('/')
 }
 
-export async function register(
-  _prevState: AuthState,
-  formData: FormData
-): Promise<AuthState> {
+export async function register(formData: FormData): Promise<AuthResult> {
   const username = formData.get('username') as string
   const password = formData.get('password') as string
   const confirmPassword = formData.get('confirmPassword') as string

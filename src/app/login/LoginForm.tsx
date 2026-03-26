@@ -1,24 +1,28 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
-import { login, register, type AuthState } from './actions'
+import { login, register } from './actions'
 
 export default function LoginForm() {
   const [isRegister, setIsRegister] = useState(false)
-  const [loginState, loginAction, isLoginPending] = useActionState<AuthState, FormData>(
-    login,
-    {}
-  )
-  const [registerState, registerAction, isRegisterPending] = useActionState<AuthState, FormData>(
-    register,
-    {}
-  )
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
 
-  const state = isRegister ? registerState : loginState
-  const action = isRegister ? registerAction : loginAction
-  const isPending = isRegister ? isRegisterPending : isLoginPending
+  async function handleSubmit(formData: FormData) {
+    setError(null)
+    
+    startTransition(async () => {
+      const result = isRegister 
+        ? await register(formData) 
+        : await login(formData)
+      
+      if (result?.error) {
+        setError(result.error)
+      }
+    })
+  }
 
   return (
     <div className="w-full max-w-md rounded-lg border bg-black p-8">
@@ -26,7 +30,7 @@ export default function LoginForm() {
         {isRegister ? 'Create Account' : 'Sign In'}
       </h1>
 
-      <form action={action} className="space-y-4">
+      <form action={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="username" className="block text-sm font-medium">
             Username
@@ -77,9 +81,9 @@ export default function LoginForm() {
           </div>
         )}
 
-        {state.error && (
+        {error && (
           <div className="rounded-lg border border-red-600 bg-red-600/10 p-3 text-sm text-red-500">
-            {state.error}
+            {error}
           </div>
         )}
 
@@ -94,7 +98,10 @@ export default function LoginForm() {
         </span>{' '}
         <button
           type="button"
-          onClick={() => setIsRegister(!isRegister)}
+          onClick={() => {
+            setIsRegister(!isRegister)
+            setError(null)
+          }}
           className="font-medium text-white underline-offset-4 hover:underline"
         >
           {isRegister ? 'Sign In' : 'Create Account'}
