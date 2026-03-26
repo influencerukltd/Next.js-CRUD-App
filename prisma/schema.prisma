@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model user {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  @@map("users")
+}
+
 model angajat {
   id_angajat  Int         @id @default(autoincrement())
   nume        String      @db.VarChar(45)
