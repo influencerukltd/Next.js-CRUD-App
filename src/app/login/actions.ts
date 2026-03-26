@@ -1,8 +1,10 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { prisma } from '@/server/db'
+import { neon } from '@neondatabase/serverless'
 import { createSession, verifyPassword, hashPassword } from '@/lib/auth'
+
+const sql = neon(process.env.DATABASE_URL!)
 
 export type AuthResult = {
   error?: string
@@ -18,14 +20,13 @@ export async function login(formData: FormData): Promise<AuthResult> {
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { username },
-    })
+    const users = await sql`SELECT id, username, password FROM users WHERE username = ${username}`
 
-    if (!user) {
+    if (users.length === 0) {
       return { error: 'Invalid username or password' }
     }
 
+    const user = users[0] as { id: number; username: string; password: string }
     const isValid = await verifyPassword(password, user.password)
 
     if (!isValid) {
@@ -59,23 +60,21 @@ export async function register(formData: FormData): Promise<AuthResult> {
   }
 
   try {
-    const existingUser = await prisma.user.findUnique({
-      where: { username },
-    })
+    const existingUsers = await sql`SELECT id FROM users WHERE username = ${username}`
 
-    if (existingUser) {
+    if (existingUsers.length > 0) {
       return { error: 'Username already exists' }
     }
 
     const hashedPassword = await hashPassword(password)
 
-    const user = await prisma.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-      },
-    })
+    const newUsers = await sql`
+      INSERT INTO users (username, password) 
+      VALUES (${username}, ${hashedPassword}) 
+      RETURNING id
+    `
 
+    const user = newUsers[0] as { id: number }
     await createSession(user.id)
   } catch (error) {
     console.error('Registration error:', error)

@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import bcrypt from 'bcryptjs'
-import { prisma } from '@/server/db'
+import { neon } from '@neondatabase/serverless'
+
+const sql = neon(process.env.DATABASE_URL!)
 
 const SESSION_COOKIE_NAME = 'session_token'
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
@@ -24,7 +26,6 @@ export async function createSession(userId: number): Promise<void> {
   const token = generateSessionToken()
   const cookieStore = await cookies()
   
-  // Store session token in cookie (in production, you'd also store this in a database)
   cookieStore.set(SESSION_COOKIE_NAME, `${userId}:${token}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -50,16 +51,13 @@ export async function getSession(): Promise<{ userId: number } | null> {
   }
   
   // Verify user still exists
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { id: true },
-  })
+  const users = await sql`SELECT id FROM users WHERE id = ${userId}`
   
-  if (!user) {
+  if (users.length === 0) {
     return null
   }
   
-  return { userId: user.id }
+  return { userId }
 }
 
 export async function destroySession(): Promise<void> {
@@ -74,10 +72,11 @@ export async function getCurrentUser() {
     return null
   }
   
-  const user = await prisma.user.findUnique({
-    where: { id: session.userId },
-    select: { id: true, username: true },
-  })
+  const users = await sql`SELECT id, username FROM users WHERE id = ${session.userId}`
   
-  return user
+  if (users.length === 0) {
+    return null
+  }
+  
+  return users[0] as { id: number; username: string }
 }
