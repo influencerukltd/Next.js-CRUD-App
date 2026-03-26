@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -37,7 +37,7 @@ model inscriere {
   id_inscriere   Int      @id @default(autoincrement())
   id_angajat     Int
   id_curs        Int
-  data_inscriere DateTime @db.DateTime(0)
+  data_inscriere DateTime @db.Timestamp(0)
   stadiu         String   @db.VarChar(45)
   angajat        angajat  @relation(fields: [id_angajat], references: [id_angajat], onDelete: Cascade, onUpdate: NoAction, map: "id_angajat")
   curs           curs     @relation(fields: [id_curs], references: [id_curs], onDelete: Cascade, onUpdate: NoAction, map: "id_curs")
