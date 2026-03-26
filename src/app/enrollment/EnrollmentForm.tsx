@@ -10,7 +10,7 @@ import { Button } from '../../components/ui/Button'
 import SelectInput, { type SelectOption } from '../../components/ui/SelectInput'
 
 type EnrollmentFormProps = {
-  type: 'Adauga' | 'Editeaza'
+  type: 'Add' | 'Edit'
   onSubmit: SubmitHandler<EnrollmentSchemaType>
   defaultValues?: EnrollmentSchemaType
 }
@@ -36,19 +36,19 @@ export default function EnrollmentForm({
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
         <SelectInput
           name="angajat"
-          label="Angajat"
+          label="Employee"
           options={options?.employeeOptions}
           defaultValue={generateDefault('employee', defaultValues, options)}
         />
         <SelectInput
           name="curs"
-          label="Curs"
+          label="Course"
           options={options?.coursesOptions}
           defaultValue={generateDefault('courses', defaultValues, options)}
         />
         <SelectInput
           name="stadiu"
-          label="Stadiu"
+          label="Status"
           options={stateOptions}
           defaultValue={generateDefault('state', defaultValues, options)}
         />
@@ -56,8 +56,8 @@ export default function EnrollmentForm({
         <Button
           type="submit"
           isLoading={isSubmitting}
-          disabled={type === 'Editeaza' && !isDirty}>
-          {type} Inscriere
+          disabled={type === 'Edit' && !isDirty}>
+          {type} Enrollment
         </Button>
       </form>
     </FormProvider>
@@ -112,15 +112,15 @@ function generateDefault(
 
 const stateOptions: SelectOption[] = [
   {
-    value: 'Neinceput',
-    label: 'Neinceput',
+    value: 'Not Started',
+    label: 'Not Started',
   },
   {
-    value: 'In Lucru',
-    label: 'In Lucru',
+    value: 'In Progress',
+    label: 'In Progress',
   },
   {
-    value: 'Terminat',
-    label: 'Terminat',
+    value: 'Completed',
+    label: 'Completed',
   },
 ]

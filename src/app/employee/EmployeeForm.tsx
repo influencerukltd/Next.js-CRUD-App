@@ -6,7 +6,7 @@ import Input from '../../components/ui/Input'
 import { employeeSchema, type EmployeeSchemaType } from '@/schemas/employee'
 
 type EmployeeFormProps = {
-  type: 'Adauga' | 'Editeaza'
+  type: 'Add' | 'Edit'
   onSubmit: SubmitHandler<EmployeeSchemaType>
   defaultValues?: EmployeeSchemaType
 }
@@ -28,29 +28,29 @@ export default function EmployeeForm({
   return (
     <FormProvider {...methods}>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-        <Input name="nume" label="Nume" placeholder="Girbescu" />
+        <Input name="nume" label="Last Name" placeholder="Smith" />
 
-        <Input name="prenume" label="Prenume" placeholder="Alexandru" />
+        <Input name="prenume" label="First Name" placeholder="John" />
 
         <Input
           name="email"
           type="email"
           label="Email"
-          placeholder="alex@alex.com"
+          placeholder="john@example.com"
         />
 
         <Input
           name="departament"
           type="text"
-          label="Departament"
+          label="Department"
           placeholder="IT"
         />
 
         <Button
           type="submit"
           isLoading={isSubmitting}
-          disabled={type === 'Editeaza' && !isDirty}>
-          {type} Angajat
+          disabled={type === 'Edit' && !isDirty}>
+          {type} Employee
         </Button>
       </form>
     </FormProvider>

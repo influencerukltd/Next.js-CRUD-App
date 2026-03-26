@@ -39,7 +39,7 @@ export default async function EnrollmentTable() {
     return (
       <div className="mx-10 rounded-lg border bg-black font-semibold">
         <div className="flex w-full items-center justify-between p-5">
-          <h2>Inscrieri</h2>
+          <h2>Enrollments</h2>
           <AddEnrollmentModal />
         </div>
         <div className="h-0.5 border-t-0 bg-gray-800"></div>
@@ -51,29 +51,29 @@ export default async function EnrollmentTable() {
   return (
     <div className="mx-10 rounded-lg border bg-black font-semibold">
       <div className="flex w-full items-center justify-between p-5">
-        <h2>Inscrieri</h2>
+        <h2>Enrollments</h2>
         <AddEnrollmentModal />
       </div>
       <div className="h-0.5 border-t-0 bg-gray-800"></div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Id_inscriere</TableHead>
-            <TableHead>Data_inscriere</TableHead>
-            <TableHead>Angajat</TableHead>
-            <TableHead>Curs</TableHead>
-            <TableHead>Stadiu</TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Enrollment Date</TableHead>
+            <TableHead>Employee</TableHead>
+            <TableHead>Course</TableHead>
+            <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {enrollments.map(enrollment => {
-            const angajat = `${enrollment.angajat_nume} ${enrollment.angajat_prenume}`
-            const dataInscriere = new Date(enrollment.data_inscriere).toLocaleDateString('en-UK')
+            const employeeName = `${enrollment.angajat_nume} ${enrollment.angajat_prenume}`
+            const enrollmentDate = new Date(enrollment.data_inscriere).toLocaleDateString('en-UK')
             return (
               <TableRow key={enrollment.id_inscriere} className="relative">
                 <TableCell>{enrollment.id_inscriere}</TableCell>
-                <TableCell>{dataInscriere}</TableCell>
-                <TableCell>{angajat}</TableCell>
+                <TableCell>{enrollmentDate}</TableCell>
+                <TableCell>{employeeName}</TableCell>
                 <TableCell>{enrollment.curs_nume}</TableCell>
                 <TableCell>{enrollment.stadiu}</TableCell>
 

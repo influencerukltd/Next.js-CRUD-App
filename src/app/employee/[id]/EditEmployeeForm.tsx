@@ -38,16 +38,16 @@ export default function EditEmployeeForm({
   return (
     <main className="mx-auto flex h-full flex-col gap-5 rounded-md border bg-black p-5 shadow-lg transition-colors ease-out sm:w-[600px]">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Editeaza Angajat</h1>
+        <h1 className="text-xl font-semibold">Edit Employee</h1>
         <Button variant="ghost" asChild>
           <Link href="/">
             <ArrowLeft className="h-auto w-7" />
-            Inapoi
+            Back
           </Link>
         </Button>
       </div>
       <EmployeeForm
-        type="Editeaza"
+        type="Edit"
         onSubmit={onSubmit}
         defaultValues={employee}
       />

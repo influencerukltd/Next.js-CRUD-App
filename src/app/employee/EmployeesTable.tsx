@@ -26,7 +26,7 @@ export default async function EmployeesTable() {
     return (
       <div className="mx-10 rounded-lg border bg-black font-semibold">
         <div className="flex w-full items-center justify-between p-5">
-          <h2>Angajati</h2>
+          <h2>Employees</h2>
           <AddEmployeeModal />
         </div>
         <div className="h-0.5 border-t-0 bg-gray-800"></div>
@@ -38,26 +38,28 @@ export default async function EmployeesTable() {
   return (
     <div className="mx-10 rounded-lg border bg-black font-semibold">
       <div className="flex w-full items-center justify-between p-5">
-        <h2>Angajati</h2>
+        <h2>Employees</h2>
         <AddEmployeeModal />
       </div>
       <div className="h-0.5 border-t-0 bg-gray-800"></div>
       <Table>
         <TableHeader>
           <TableRow>
-            {Object.keys(employees[0]).map(column => (
-              <TableHead key={column}>
-                {column.charAt(0).toUpperCase() + column.slice(1)}
-              </TableHead>
-            ))}
+            <TableHead>ID</TableHead>
+            <TableHead>Last Name</TableHead>
+            <TableHead>First Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Department</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {employees.map(employee => (
             <TableRow key={employee.id_angajat} className="relative">
-              {Object.values(employee).map((value, idx) => (
-                <TableCell key={idx}>{String(value)}</TableCell>
-              ))}
+              <TableCell>{employee.id_angajat}</TableCell>
+              <TableCell>{employee.nume}</TableCell>
+              <TableCell>{employee.prenume}</TableCell>
+              <TableCell>{employee.email}</TableCell>
+              <TableCell>{employee.departament}</TableCell>
               <TableCell>
                 <EditButton href={`/employee/${employee.id_angajat}`} />
                 <DeleteButton id={employee.id_angajat} fetchUrl="employee" />

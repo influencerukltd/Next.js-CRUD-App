@@ -25,7 +25,7 @@ export default async function CoursesTable() {
     return (
       <div className="mx-10 rounded-lg border bg-black font-semibold">
         <div className="flex w-full items-center justify-between p-5">
-          <h2>Cursuri</h2>
+          <h2>Courses</h2>
           <AddCourseModal />
         </div>
         <div className="h-0.5 border-t-0 bg-gray-800"></div>
@@ -37,25 +37,26 @@ export default async function CoursesTable() {
   return (
     <div className="mx-10 rounded-lg border bg-black font-semibold">
       <div className="flex w-full items-center justify-between p-5">
-        <h2>Cursuri</h2>
+        <h2>Courses</h2>
         <AddCourseModal />
       </div>
       <div className="h-0.5 border-t-0 bg-gray-800"></div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Id_curs</TableHead>
-            <TableHead>Nume</TableHead>
-            <TableHead>Durata (zile)</TableHead>
-            <TableHead>Pret (€)</TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Duration (days)</TableHead>
+            <TableHead>Price (EUR)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {courses.map(course => (
             <TableRow key={course.id_curs} className="relative">
-              {Object.values(course).map((value, idx) => (
-                <TableCell key={idx}>{String(value)}</TableCell>
-              ))}
+              <TableCell>{course.id_curs}</TableCell>
+              <TableCell>{course.nume}</TableCell>
+              <TableCell>{course.durata}</TableCell>
+              <TableCell>{course.pret}</TableCell>
               <TableCell>
                 <EditButton href={`/course/${course.id_curs}`} />
                 <DeleteButton id={course.id_curs} fetchUrl="course" />

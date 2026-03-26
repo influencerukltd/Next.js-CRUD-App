@@ -5,8 +5,8 @@ import { Button } from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import { type CourseSchemaType, courseSchema } from '@/schemas/course'
 
-type EmployeeFormProps = {
-  type: 'Adauga' | 'Editeaza'
+type CourseFormProps = {
+  type: 'Add' | 'Edit'
   onSubmit: SubmitHandler<CourseSchemaType>
   defaultValues?: CourseSchemaType
 }
@@ -15,7 +15,7 @@ export default function CourseForm({
   type,
   onSubmit,
   defaultValues,
-}: EmployeeFormProps) {
+}: CourseFormProps) {
   const methods = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
     defaultValues,
@@ -28,29 +28,29 @@ export default function CourseForm({
   return (
     <FormProvider {...methods}>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-        <Input name="nume" label="Nume" placeholder="Girbescu" />
+        <Input name="nume" label="Name" placeholder="Course Name" />
 
         <Input
           name="durata"
-          label="Durata"
+          label="Duration"
           inputMode="numeric"
-          placeholder="30 (zile)"
+          placeholder="30 (days)"
           registerOptions={{ valueAsNumber: true }}
         />
 
         <Input
           name="pret"
-          label="Pret"
+          label="Price"
           inputMode="numeric"
-          placeholder="50€"
+          placeholder="50 EUR"
           registerOptions={{ valueAsNumber: true }}
         />
 
         <Button
           type="submit"
           isLoading={isSubmitting}
-          disabled={type === 'Editeaza' && !isDirty}>
-          {type} Curs
+          disabled={type === 'Edit' && !isDirty}>
+          {type} Course
         </Button>
       </form>
     </FormProvider>
