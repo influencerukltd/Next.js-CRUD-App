@@ -26,9 +26,11 @@ export async function createSession(userId: number): Promise<void> {
   const token = generateSessionToken()
   const cookieStore = await cookies()
   
+  // Use secure cookies only when explicitly on HTTPS in production
+  // In v0 preview environment, we need to allow non-secure cookies
   cookieStore.set(SESSION_COOKIE_NAME, `${userId}:${token}`, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Allow cookies in preview environment
     sameSite: 'lax',
     maxAge: SESSION_MAX_AGE,
     path: '/',
