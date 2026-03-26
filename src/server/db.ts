@@ -1,3 +1,7 @@
+// Database connection using Neon serverless driver
+// This file exports a sql function for running SQL queries
+// NO PRISMA - using @neondatabase/serverless directly
+
 import { neon } from '@neondatabase/serverless'
 
 if (!process.env.DATABASE_URL) {
